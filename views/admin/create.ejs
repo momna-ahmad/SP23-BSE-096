@@ -1,0 +1,30 @@
+
+<form action=""  method="post">
+<div class="row">
+    <label for="title" class="col-3">Product name: </label>
+    <input type="title" class="col-3" >
+</div>
+<div class="row">
+    <label for="description" class="col-3"> Product description: </label> 
+    <input type="description" class="col-3">
+</div>
+
+<div class="row">
+    <label for="price" class="col-3"> Price: </label> 
+    <input type="price" class="col-3">
+</div>
+<div class="row">
+    <button class="col-2" >
+        Add product
+    </button>
+</div>
+</form>
+
+<%-contentFor("styles") %>
+<style>
+    div{
+        margin-top : 10px !important; 
+        justify-content: center;
+    }
+    
+</style>
