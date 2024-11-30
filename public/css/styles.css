@@ -8,7 +8,7 @@
 .front-page{
     height: 750px;
     width: 100%;
-     background-image: url("homepage\ pic.jpg");
+     background-image: url("/images/homepage\ pic.jpg");
      background-size: cover;
      background-position: center top ; 
      background-repeat: no-repeat;
