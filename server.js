@@ -33,9 +33,22 @@ server.get("/", (req, res) => {
 
 server.get('/admin/homepage', (req,res)=>{
   return res.render("partials/mcqueenbody" , {
-    layout : "index"
+    layout : "index",
+    stylesheet : '/css/styles.css'
   }) ;
 })
+
+server.get("/admin/mainmenu", async (req, res) => {
+  let Product = require("./models/product.model");
+  let products = await Product.find();
+  return res.render("partials/mainMenu",
+     {
+      stylesheet: '/css/mainMenuStyles.css',
+      layout: 'index' ,
+      
+      products
+     });
+});
 
 let connectionString = "mongodb://localhost/alexandermcqueen";
 mongoose
