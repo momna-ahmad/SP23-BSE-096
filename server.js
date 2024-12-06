@@ -2,10 +2,14 @@ const express = require("express");
 const mongoose = require("mongoose");
 
 
+
 var expressLayouts = require("express-ejs-layouts");
 let server = express();
 server.set("view engine", "ejs");
 server.use(expressLayouts);
+
+
+
 
 
 //expose public folder for publically accessible static files
