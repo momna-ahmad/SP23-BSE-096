@@ -9,7 +9,14 @@ server.set("view engine", "ejs");
 server.use(expressLayouts);
 
 
-
+let connectionString = "mongodb://localhost/alexandermcqueen";
+mongoose
+  .connect(connectionString)
+  .then( async () =>
+    {
+      console.log("Connected to Mongo DB Server: " + connectionString);
+    } )
+  .catch((error) => console.log(error.message));
 
 
 //expose public folder for publically accessible static files
@@ -32,6 +39,7 @@ server.get("/about-me", (req, res) => {
   return res.render("about-me");
 });
 server.get("/", (req, res) => {
+  
   return res.render("homepage");
 });
 
@@ -54,14 +62,9 @@ server.get("/admin/mainmenu", async (req, res) => {
      });
 });
 
-let connectionString = "mongodb://localhost/alexandermcqueen";
-mongoose
-  .connect(connectionString)
-  .then( async () =>
-    {
-      console.log("Connected to Mongo DB Server: " + connectionString);
-    } )
-  .catch((error) => console.log(error.message));
+
+
+
 
 server.listen(5000, () => {
   console.log(`Server Started at localhost:5000`);

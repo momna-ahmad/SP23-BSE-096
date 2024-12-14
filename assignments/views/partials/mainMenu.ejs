@@ -8,10 +8,7 @@
                 <h3 class="product-title"><%= product.title %></h3>
                 <p class="product-price">$<%= product.price.toFixed(2) %></p>
             </div>
-            <div class="product-actions">
-                <a href="/edit/<%= product.id %>" class="edit-button">Edit</a>
-                <a href="/delete/<%= product.id %>" class="delete-button">Delete</a>
-            </div>
+            
         </div>
     <% }); %>
 </div>
