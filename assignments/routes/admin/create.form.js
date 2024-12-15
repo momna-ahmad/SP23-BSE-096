@@ -2,6 +2,7 @@ const express = require("express");
 let router = express.Router();
 const multer = require('multer');
 let Product = require("../../models/product.model");
+const categoryModel = require("../../models/category.model");
 
 
 
@@ -19,16 +20,19 @@ const upload = multer({ storage: storage });
 
 
 //form is fetched
-router.get('/views/admin/create', (req,res)=> {
+router.get('/views/admin/create', async(req,res)=> {
+  let categories = await categoryModel.find() ;
+  
   return res.render("admin/create",{
-      layout: "formLayout" 
+      layout: "formLayout",
+      categories
   }) ;
 });
 
 //form submission handled here
 router.post("/views/admin/create", upload.single("file"), async (req, res) => {
   let data = req.body;
-  console.log(data) ;
+  
   let newProduct = new Product(data);
   
   if (req.file) {

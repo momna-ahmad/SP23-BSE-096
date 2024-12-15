@@ -6,7 +6,8 @@ const Product = require("../../models/product.model") ;
 
 router.get("/admin/products", async (req, res) => {
   
-let products =  await Product.find() ;
+let products =  await Product.find().populate('category') ;
+
   return res.render("admin/products", {
     layout: "adminlayout",
     pageTitle: "Manage Your Products",

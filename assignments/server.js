@@ -33,6 +33,9 @@ server.use(adminProductsRouter);
 let createform = require("./routes/admin/create.form") ;
 server.use(createform) ;
 
+let adminCategoryController = require("./routes/admin/category.controller");
+server.use(adminCategoryController) ;
+
 
 
 server.get("/about-me", (req, res) => {
