@@ -1,6 +1,7 @@
 const express = require("express");
 let router = express.Router();
 
+
 const Product = require("../../models/product.model") ;
 
 
@@ -17,9 +18,10 @@ let products =  await Product.find().populate('category') ;
 
 router.get("/shop-now" , async(req, res) => {
   let products =  await Product.find() ;
+  const stylesheets = [ '/css/styles.css' , '/css/products-page.css']
   return res.render("partials/mainMenu" , {
-   stylesheet : 'css/mainMenuStyles' ,
-      layout: 'index' ,
+    layout: 'index' ,
+   stylesheet :  stylesheets,
     products
   })
 })
@@ -46,6 +48,26 @@ router.post("/admin/products/edit/:id" , async(req,res)=>{
   await product.save();
   return res.redirect("/admin/products");
 })
+
+router.get("/sort-lowtohigh", async(req,res)=>{
+  let products = await Product.find().sort({ price: 1 });
+  const stylesheets = [ '/css/styles.css' , '/css/products-page.css']
+  return res.render("partials/mainMenu" , {
+    layout: 'index' ,
+   stylesheet :  stylesheets,
+    products
+  })
+} )
+
+router.get("/sort-hightolow", async(req,res)=>{
+  let products = await Product.find().sort({ price: -1 });
+  const stylesheets = [ '/css/styles.css' , '/css/products-page.css']
+  return res.render("partials/mainMenu" , {
+    layout: 'index' ,
+   stylesheet :  stylesheets,
+    products
+  })
+} )
 
 
 module.exports = router;

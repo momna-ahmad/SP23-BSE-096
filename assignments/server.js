@@ -1,6 +1,30 @@
 const express = require("express");
 const mongoose = require("mongoose");
 
+const multer = require('multer');
+const { v2: cloudinary } = require('cloudinary');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+require('dotenv').config();
+
+const app = express();
+
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// Configure Multer with Cloudinary Storage
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'uploads', // Cloudinary folder name
+    allowed_formats: ['jpg', 'png', 'jpeg'], // Restrict file types
+  },
+});
+
+const upload = multer({ storage: storage });
 
 
 var expressLayouts = require("express-ejs-layouts");
@@ -37,6 +61,8 @@ let adminCategoryController = require("./routes/admin/category.controller");
 server.use(adminCategoryController) ;
 
 
+const Category = require("./models/category.model") ;
+
 
 server.get("/about-me", (req, res) => {
   return res.render("about-me");
@@ -49,9 +75,27 @@ server.get("/", (req, res) => {
 server.get('/admin/homepage', (req,res)=>{
   return res.render("partials/mcqueenbody" , {
     layout : "index",
+    stylesheet : '/css/styles.css'
   }) ;
 })
 
+//route to handle category form submission
+server.post("/views/admin/create-category", upload.single('image') , async(req,res)=>{
+
+  if (req.file) {
+    console.log('File uploaded successfully! ');
+  } else {
+    console.log('File upload failed.');
+  }
+  let data = req.body;
+  data.image = req.file.path;
+  console.log(data) ;
+    let category = new Category(data) ;
+  
+    await category.save() ;
+    return res.redirect("/admin/category" ) ;
+    
+});
 
 
 server.listen(5000, () => {
