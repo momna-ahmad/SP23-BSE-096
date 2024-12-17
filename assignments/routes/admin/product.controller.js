@@ -16,15 +16,33 @@ let products =  await Product.find().populate('category') ;
   });
 });
 
-router.get("/shop-now" , async(req, res) => {
-  let products =  await Product.find() ;
-  const stylesheets = [ '/css/styles.css' , '/css/products-page.css']
-  return res.render("partials/mainMenu" , {
-    layout: 'index' ,
-   stylesheet :  stylesheets,
-    products
-  })
-})
+
+router.get("/shop-now/:page?", async (req, res) => {
+  let page = req.params.page;
+  page = page ? Number(page) : 1;
+  let pageSize = 6;
+  let totalRecords = await Product.countDocuments();
+  let totalPages = Math.ceil(totalRecords / pageSize);
+  // return res.send({ page });
+  let products = await Product.find()
+    .limit(pageSize)
+    .skip((page - 1) * pageSize);
+
+    const stylesheets = [ '/css/styles.css' , '/css/products-page.css']
+
+  return res.render("partials/mainMenu", {
+    layout: 'index',
+    stylesheet :  stylesheets,
+    pageTitle: "Manage Your Products",
+    products,
+    page,
+    pageSize,
+    totalPages,
+    totalRecords,
+  });
+});
+
+
 
 router.get("/admin/products/delete/:id" , async(req, res) =>{
   let params = req.params;
@@ -49,23 +67,49 @@ router.post("/admin/products/edit/:id" , async(req,res)=>{
   return res.redirect("/admin/products");
 })
 
-router.get("/sort-lowtohigh", async(req,res)=>{
-  let products = await Product.find().sort({ price: 1 });
+router.get("/sort-lowtohigh/:page?", async(req,res)=>{
+  let page = req.params.page;
+  page = page ? Number(page) : 1;
+  let pageSize = 6;
+  let totalRecords = await Product.countDocuments();
+  let totalPages = Math.ceil(totalRecords / pageSize);
+  // return res.send({ page });
+  let products = await Product.find().sort({ price: 1 })
+    .limit(pageSize)
+    .skip((page - 1) * pageSize);
+
   const stylesheets = [ '/css/styles.css' , '/css/products-page.css']
   return res.render("partials/mainMenu" , {
     layout: 'index' ,
    stylesheet :  stylesheets,
-    products
+    products,
+    page,
+    pageSize,
+    totalPages,
+    totalRecords,
   })
 } )
 
-router.get("/sort-hightolow", async(req,res)=>{
-  let products = await Product.find().sort({ price: -1 });
+router.get("/sort-hightolow/:page?", async(req,res)=>{
+  let page = req.params.page;
+  page = page ? Number(page) : 1;
+  let pageSize = 6;
+  let totalRecords = await Product.countDocuments();
+  let totalPages = Math.ceil(totalRecords / pageSize);
+  // return res.send({ page });
+  let products = await Product.find().sort({ price: -1 })
+    .limit(pageSize)
+    .skip((page - 1) * pageSize);
+
   const stylesheets = [ '/css/styles.css' , '/css/products-page.css']
   return res.render("partials/mainMenu" , {
     layout: 'index' ,
    stylesheet :  stylesheets,
-    products
+    products,
+    page,
+    pageSize,
+    totalPages,
+    totalRecords,
   })
 } )
 

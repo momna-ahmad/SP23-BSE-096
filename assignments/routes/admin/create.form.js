@@ -1,22 +1,19 @@
 const express = require("express");
 let router = express.Router();
-const multer = require('multer');
-let Product = require("../../models/product.model");
-const categoryModel = require("../../models/category.model");
-
-
-
-// Set up storage for multer
+let multer = require("multer");
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, './uploads'); // Directory to store files
+    cb(null, "./uploads"); // Directory to store files
   },
   filename: function (req, file, cb) {
     cb(null, `${Date.now()}-${file.originalname}`); // Unique file name
   },
 });
-
 const upload = multer({ storage: storage });
+let Product = require("../../models/product.model");
+const categoryModel = require("../../models/category.model");
+
+
 
 
 //form is fetched
@@ -32,9 +29,8 @@ router.get('/views/admin/create', async(req,res)=> {
 //form submission handled here
 router.post("/views/admin/create", upload.single("file"), async (req, res) => {
   let data = req.body;
-  
   let newProduct = new Product(data);
-  
+  newProduct.title = data.title;
   if (req.file) {
     newProduct.picture = req.file.filename;
   }

@@ -1,10 +1,15 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const session = require('express-session');
 
+
+const cookieParser = require("cookie-parser"); 
 const multer = require('multer');
 const { v2: cloudinary } = require('cloudinary');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 require('dotenv').config();
+
+
 
 const app = express();
 
@@ -29,8 +34,20 @@ const upload = multer({ storage: storage });
 
 var expressLayouts = require("express-ejs-layouts");
 let server = express();
+
+// Session middleware setup (required for flash messages)
+server.use(session({
+  secret: 'your-secret-key',  // Replace with a strong secret key
+  resave: false,
+  saveUninitialized: true
+}));
+
+
+
 server.set("view engine", "ejs");
 server.use(expressLayouts);
+
+
 
 
 let connectionString = "mongodb://localhost/alexandermcqueen";
@@ -59,6 +76,9 @@ server.use(createform) ;
 
 let adminCategoryController = require("./routes/admin/category.controller");
 server.use(adminCategoryController) ;
+
+let userController = require("./routes/admin/user.controller") ;
+server.use(userController) ;
 
 
 const Category = require("./models/category.model") ;
