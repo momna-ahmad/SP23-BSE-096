@@ -69,12 +69,21 @@ server.use(express.urlencoded());
 
 
 let adminProductsRouter = require("./routes/admin/product.controller");
+let createform = require("./routes/admin/create.form") ;
+
+app.use(cookieParser());
+app.use(session({
+  secret: "Shh, it's a secret!",
+  resave: false,
+  saveUninitialized: false,
+  cookie: { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }
+}));
 server.use(adminProductsRouter);
 
-let createform = require("./routes/admin/create.form") ;
+
 server.use(createform) ;
 
-let adminCategoryController = require("./routes/admin/category.controller");
+
 server.use(adminCategoryController) ;
 
 let userController = require("./routes/admin/user.controller") ;
