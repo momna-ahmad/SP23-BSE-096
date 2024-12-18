@@ -11,6 +11,7 @@ let userSchema = mongoose.Schema({
     required : true 
   },
   name : String ,
+  role: [String],
 });
 
 let userModel = mongoose.model("user", userSchema);

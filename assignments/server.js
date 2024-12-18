@@ -5,10 +5,11 @@ const multer = require('multer');
 const { v2: cloudinary } = require('cloudinary');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 require('dotenv').config();
+const session = require('express-session');
+const cookieParser = require("cookie-parser"); 
 
 
 
-const app = express();
 
 // Configure Cloudinary
 cloudinary.config({
@@ -16,6 +17,7 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+
 
 // Configure Multer with Cloudinary Storage
 const storage = new CloudinaryStorage({
@@ -33,6 +35,8 @@ var expressLayouts = require("express-ejs-layouts");
 let server = express();
 
 
+server.use(cookieParser())
+server.use(session({ secret: "My session secret" }));
 
 
 
@@ -59,8 +63,10 @@ server.use(express.static("public"));
 // add support for fetching data from request body
 server.use(express.urlencoded());
 
-let adminMiddleware = require("./middlewares/admin.middleware");
+let siteMiddleware = require("./middlewares/site.middleware");
 let authMiddleware = require("./middlewares/auth.middleware");
+let adminMiddleware = require("./middlewares/admin.middleware");
+server.use(siteMiddleware);
 
 
 
@@ -91,22 +97,27 @@ server.get("/admin/homepage", (req, res) => {
 
 server.get('/', (req,res)=>{
 
-  if (req.session.user?.role === "admin") {
-    // Redirect to the admin homepage if the user is an admin
-    return res.redirect("/admin/homepage");
-  } else {
+
     let btn ;
-    if(req.params.btn)
-      btn = req.params.btn;
+    
+    if(req.query.btn)
+    {
+      btn = req.query.btn;
+      console.log(btn) ;
+    }
+      
     else
-    btn = "partials/login-tag" ;
+    {
+      btn = "partials/login-tag" ;
+    }
+    
     // If not an admin, render the main menu or a regular page
     return res.render("partials/mcqueenbody", {
       layout: "index", 
       btn,
       stylesheet: "/css/styles.css"
     });
-  }
+
 })
 
 

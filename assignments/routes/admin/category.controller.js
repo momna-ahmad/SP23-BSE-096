@@ -3,6 +3,7 @@ const multer = require('multer');
 const path = require('path');
 let router = express.Router();
 
+let Product = require("../../models/product.model");
 
 // Set up storage for multer
 const storage = multer.diskStorage({
@@ -84,5 +85,28 @@ router.get("/admin/mainmenu", async (req, res) => {
       categories
      });
 });
+
+router.get("/categories/:id",async (req,res)=>{
+  let page = req.params.page;
+  page = page ? Number(page) : 1;
+  let pageSize = 6;
+  let totalRecords = await Product.countDocuments();
+  let totalPages = Math.ceil(totalRecords / pageSize);
+  // return res.send({ page });
+  let products = await Product.find({ category: req.params.id }).populate('category')
+    .limit(pageSize)
+    .skip((page - 1) * pageSize);
+
+  const stylesheet = [ '/css/styles.css' , '/css/products-page.css'] ;
+  return res.render("partials/mainMenu" , {
+    layout : "index" ,
+    stylesheet ,
+    products ,
+    page,
+    pageSize,
+    totalPages,
+    totalRecords,
+  })
+})
 
 module.exports = router ;

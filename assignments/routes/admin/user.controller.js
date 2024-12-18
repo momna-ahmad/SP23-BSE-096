@@ -33,40 +33,43 @@ router.get("/login" , (req,res)=>{
   return res.render('partials/login', { layout : "formLayout", successMessage:"registeration successful" });
 });
 
-router.post("/login" , async(req,res)=>{
-    const { email, password } = req.body;
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
 
-    try {
-        // Find the user by email
-        const user = await User.findOne({ email });
+  try {
+      // Find the user by email
+      const user = await User.findOne({ email });
 
-        // If user does not exist
-        if (!user) {
-           let successMessage = "User not found";
-            return res.redirect('/login');  // Redirect back to login page
-        }
+      // If user does not exist
+      if (!user) {
+          return res.redirect("/login");  // Redirect back to login page
+      }
 
-        // Compare the password provided by the user with the hashed password in the database
-        const isMatch = await bcrypt.compare(password, user.password);
+      // Compare the password provided by the user with the hashed password in the database
+      const isMatch = await bcrypt.compare(password, user.password);
 
-        if (!isMatch) {
-            let successMessage = "Wrong password" ;
-            return res.redirect('/');  // Redirect back to login page
-        }
+      if (!isMatch) {
+          return res.redirect("/login");  // Redirect back to login page on incorrect password
+      }
 
-        // If the password matches, you can set a session or a token
-        // For example, using sessions:
+      // Set user session (ensure the role is correctly assigned)
+      //req.session.user = user;  // Store the whole user object in session
 
-        let successMessage = "login successful" ;
-        res.redirect('/?btn=partials/logout-tag' );  // Redirect to the dashboard or home page
+      // Ensure the role is properly checked and set
+      console.log("checking role") ;
+      console.log("user role" + req.session.user.role);
+      if (req.session.user.role === "admin") {
+          return res.redirect("/admin/homepage");  // Admin redirected to admin homepage
+      } else {
+          return res.redirect("/?btn=partials/logout-tag");  // Regular user redirected to homepage
+      }
 
-    } catch (error) {
-        console.error(error);
-        let successMessage = "server error" ;
-        res.redirect('/login');  // Redirect back to login page on error
-    }
+  } catch (error) {
+      console.error(error);
+      return res.redirect("/login");  // Redirect back to login page on error
+  }
+});
 
-} );
 
 router.get('/logout', (req, res) => {
     // Destroy the session
