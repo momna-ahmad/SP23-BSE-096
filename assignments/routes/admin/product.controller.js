@@ -6,7 +6,7 @@ const Product = require("../../models/product.model") ;
 
 
 router.get("/admin/products", async (req, res) => {
-  
+  console.log(req.session.userId) ;
 let products =  await Product.find().populate('category') ;
 
   return res.render("admin/products", {
@@ -112,6 +112,22 @@ router.get("/sort-hightolow/:page?", async(req,res)=>{
     totalRecords,
   })
 } )
+ 
 
+//routes for cart functionality
+router.get("/add-to-cart/:id" , (req,res)=>{
+  let cart = req.cookies.cart;
+  cart = cart ? cart : [];
+  cart.push(req.params.id);
+  res.cookie("cart", cart);
+  res.redirect("/shop-now") ;
+});
+
+router.get("/cart", async(req,res)=>{
+  let cart = req.cookies.cart;
+  cart = cart ? cart : [];
+  let products = await Product.find({ _id: { $in: cart } });
+  return res.render("partials/cart", { products , layout:"index" });
+})
 
 module.exports = router;

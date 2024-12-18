@@ -1,9 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const session = require('express-session');
 
-
-const cookieParser = require("cookie-parser"); 
 const multer = require('multer');
 const { v2: cloudinary } = require('cloudinary');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
@@ -35,12 +32,7 @@ const upload = multer({ storage: storage });
 var expressLayouts = require("express-ejs-layouts");
 let server = express();
 
-// Session middleware setup (required for flash messages)
-server.use(session({
-  secret: 'your-secret-key',  // Replace with a strong secret key
-  resave: false,
-  saveUninitialized: true
-}));
+
 
 
 
@@ -70,14 +62,10 @@ server.use(express.urlencoded());
 
 let adminProductsRouter = require("./routes/admin/product.controller");
 let createform = require("./routes/admin/create.form") ;
+let adminCategoryController = require("./routes/admin/category.controller");
+let userController = require("./routes/admin/user.controller") ;
 
-app.use(cookieParser());
-app.use(session({
-  secret: "Shh, it's a secret!",
-  resave: false,
-  saveUninitialized: false,
-  cookie: { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }
-}));
+server.use(userController) ;
 server.use(adminProductsRouter);
 
 
@@ -86,8 +74,8 @@ server.use(createform) ;
 
 server.use(adminCategoryController) ;
 
-let userController = require("./routes/admin/user.controller") ;
-server.use(userController) ;
+
+
 
 
 const Category = require("./models/category.model") ;
@@ -102,8 +90,10 @@ server.get("/", (req, res) => {
 });
 
 server.get('/admin/homepage', (req,res)=>{
+
   return res.render("partials/mcqueenbody" , {
     layout : "index",
+    btn : "partials/login-tag" ,
     stylesheet : '/css/styles.css'
   }) ;
 })
