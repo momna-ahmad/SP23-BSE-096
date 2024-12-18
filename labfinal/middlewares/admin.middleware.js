@@ -1,5 +1,5 @@
 module.exports = async function (req, res, next) {
-  if (!req.session.user?.role || req.session.user.role !== "admin") {
+  if (!req.session.user?.role || req.session.user.role[0] !== "admin") {
     console.log('Not an admin or no role found, redirecting to login');
     return res.redirect("/login");
   }

@@ -74,11 +74,13 @@ let adminProductsRouter = require("./routes/admin/product.controller");
 let createform = require("./routes/admin/create.form") ;
 let adminCategoryController = require("./routes/admin/category.controller");
 let userController = require("./routes/admin/user.controller") ;
+let orderController = require("./routes/admin/order.controller") ;
 
 server.use(userController) ;
 server.use(adminProductsRouter);
 server.use(createform) ;
 server.use(adminCategoryController) ;
+server.use(orderController) ;
 
 
 
@@ -118,7 +120,44 @@ server.get('/', (req,res)=>{
       stylesheet: "/css/styles.css"
     });
 
-})
+});
+
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+      // Find the user by email
+      const user = await User.findOne({ email });
+
+      // If user does not exist
+      if (!user) {
+          return res.redirect("/login");  // Redirect back to login page
+      }
+
+      // Compare the password provided by the user with the hashed password in the database
+      const isMatch = await bcrypt.compare(password, user.password);
+
+      if (!isMatch) {
+          return res.redirect("/login");  // Redirect back to login page on incorrect password
+      }
+
+      // Set user session (ensure the role is correctly assigned)
+      //req.session.user = user;  // Store the whole user object in session
+
+      // Ensure the role is properly checked and set
+    
+      req.session.user = user;
+      if (req.session.user.role === "admin" || user.role[0] === 'admin') {
+          return res.redirect("/admin/homepage");  // Admin redirected to admin homepage
+      } else {
+          return res.redirect("/?btn=partials/logout-tag");  // Regular user redirected to homepage
+      }
+
+  } catch (error) {
+      console.error(error);
+      return res.redirect("/login");  // Redirect back to login page on error
+  }
+});
 
 
 

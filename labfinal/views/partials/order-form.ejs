@@ -1,0 +1,36 @@
+<form action="/submit-order" method="POST">
+    <!-- Displaying the product details -->
+    <div class="card">
+        <div class="card-header">
+            <h4>Products</h4>
+        </div>
+        <div class="card-body">
+            <ul class="list-group">
+                <!-- Looping through products passed from the backend -->
+                <% let total = 0; %>
+                <% products.forEach(product => { %>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span><%= product.title %></span>
+                        <span>$<%= product.price.toFixed(2) %></span>
+                    </li>
+                    <% total += product.price; %>
+                <% }); %>
+                <li class="list-group-item d-flex justify-content-between font-weight-bold">
+                    <span>Total</span>
+                    <span>$<%= total.toFixed(2) %></span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Location input field -->
+    <div class="form-group mt-4">
+        <label for="location">Location</label>
+        <input type="text" class="form-control" id="location" name="location" placeholder="Enter your location" required>
+    </div>
+
+    <!-- Submit button -->
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary btn-block">Submit Order</button>
+    </div>
+</form>

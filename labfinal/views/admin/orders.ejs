@@ -1,0 +1,50 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th>Location</th>
+            <th>Total Price</th>
+            <th>Order Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% for (let index = 0; index < orders.length; index++) { %>
+            <tr>
+
+                <!-- Location -->
+                <td><%= orders[index].location %></td>
+
+                <!-- Products (Array) 
+                <td>
+                    <ul>
+                        <% orders[index].products.forEach(function(product) { %>
+                            <li><%= product.name %> - $<%= product.price.toFixed(2) %></li>
+                        <% }); %>
+                    </ul>
+                </td>
+                -->
+
+                <!-- Total Price -->
+                <td>$<%= orders[index].total.toFixed(2) %></td>
+
+                <!-- Order Date -->
+                <td><%= new Date(orders[index].orderDate).toLocaleString() %></td>
+
+                <!-- Actions (Edit/Delete or View Order) -->
+                <td>
+                    <a href="/admin/orders/delete/<%= orders[index]._id %>" class="btn btn-danger">Delete</a>
+                    <a href="/admin/orders/edit/<%= orders[index]._id %>"></a>
+                    <div class="dropdown float-end">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="sortButton" data-bs-toggle="dropdown" aria-expanded="false">
+                          shipment
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="shipbutton">
+                          <li><a class="dropdown-item" href="//admin/orders/edit/pending/<%= orders[index]._id %>">Pending</a></li>
+                          <li><a class="dropdown-item" href="/admin/orders/edit/shipped/<%= orders[index]._id %>">Shipped</a></li>
+                          <li><a class="dropdown-item" href="/admin/orders/edit/elivered<%= orders[index]._id %>">Delivered</a></li>
+                        </ul>
+                      </div>
+                </td>
+            </tr>
+        <% } %>
+    </tbody>
+</table>

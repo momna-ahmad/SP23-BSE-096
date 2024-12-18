@@ -131,4 +131,6 @@ router.get("/cart", async(req,res)=>{
   return res.render("partials/cart", { products , stylesheet, layout:"index" });
 }) ;
 
+
+
 module.exports = router;
