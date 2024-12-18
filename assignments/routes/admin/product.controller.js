@@ -127,7 +127,8 @@ router.get("/cart", async(req,res)=>{
   let cart = req.cookies.cart;
   cart = cart ? cart : [];
   let products = await Product.find({ _id: { $in: cart } });
-  return res.render("partials/cart", { products , layout:"index" });
-})
+  let stylesheet = ["/css/styles" , "/css/mainMenuStyles"] ;
+  return res.render("partials/cart", { products , stylesheet, layout:"index" });
+}) ;
 
 module.exports = router;

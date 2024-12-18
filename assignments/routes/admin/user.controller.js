@@ -6,6 +6,7 @@ let router = express.Router();
 const User  = require("../../models/user.model") ;
 
 
+
 router.use(cookieParser());
 // Session middleware setup (required for flash messages)
 router.use(session({
@@ -50,15 +51,14 @@ router.post("/login" , async(req,res)=>{
 
         if (!isMatch) {
             let successMessage = "Wrong password" ;
-            return res.redirect('/login');  // Redirect back to login page
+            return res.redirect('/');  // Redirect back to login page
         }
 
         // If the password matches, you can set a session or a token
         // For example, using sessions:
 
-        req.session.userId = user._id;  // Set the session with userId
         let successMessage = "login successful" ;
-        res.redirect('/admin/homepage' );  // Redirect to the dashboard or home page
+        res.redirect('/?btn=partials/logout-tag' );  // Redirect to the dashboard or home page
 
     } catch (error) {
         console.error(error);
@@ -78,8 +78,9 @@ router.get('/logout', (req, res) => {
       // Clear the session cookie
       res.clearCookie('connect.sid');  // Default cookie name for sessions
       let stylesheet = ['/css/styles' , '/css/mainMenuStyles'] ;
-      res.redirect('/admin/homepage' , {btn : "partials/logout-tag"}) ;
+      res.redirect('/admin/homepage') ;
     });
   });
+
 
 module.exports = router;

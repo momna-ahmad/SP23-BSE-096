@@ -59,6 +59,10 @@ server.use(express.static("public"));
 // add support for fetching data from request body
 server.use(express.urlencoded());
 
+let adminMiddleware = require("./middlewares/admin.middleware");
+let authMiddleware = require("./middlewares/auth.middleware");
+
+
 
 let adminProductsRouter = require("./routes/admin/product.controller");
 let createform = require("./routes/admin/create.form") ;
@@ -67,11 +71,7 @@ let userController = require("./routes/admin/user.controller") ;
 
 server.use(userController) ;
 server.use(adminProductsRouter);
-
-
 server.use(createform) ;
-
-
 server.use(adminCategoryController) ;
 
 
@@ -84,19 +84,32 @@ const Category = require("./models/category.model") ;
 server.get("/about-me", (req, res) => {
   return res.render("about-me");
 });
-server.get("/", (req, res) => {
+server.get("/admin/homepage", (req, res) => {
   
   return res.render("homepage");
 });
 
-server.get('/admin/homepage', (req,res)=>{
+server.get('/', (req,res)=>{
 
-  return res.render("partials/mcqueenbody" , {
-    layout : "index",
-    btn : "partials/login-tag" ,
-    stylesheet : '/css/styles.css'
-  }) ;
+  if (req.session.user?.role === "admin") {
+    // Redirect to the admin homepage if the user is an admin
+    return res.redirect("/admin/homepage");
+  } else {
+    let btn ;
+    if(req.params.btn)
+      btn = req.params.btn;
+    else
+    btn = "partials/login-tag" ;
+    // If not an admin, render the main menu or a regular page
+    return res.render("partials/mcqueenbody", {
+      layout: "index", 
+      btn,
+      stylesheet: "/css/styles.css"
+    });
+  }
 })
+
+
 
 //route to handle category form submission
 server.post("/views/admin/create-category", upload.single('image') , async(req,res)=>{
@@ -115,6 +128,9 @@ server.post("/views/admin/create-category", upload.single('image') , async(req,r
     return res.redirect("/admin/category" ) ;
     
 });
+
+server.use("/", authMiddleware, adminMiddleware, adminProductsRouter);
+
 
 
 server.listen(5000, () => {
