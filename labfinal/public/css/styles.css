@@ -1,0 +1,110 @@
+.inside_chatTabImage{
+
+    width: 3%;
+    position: fixed;
+    bottom: 2%;
+    right: 1%;
+}
+.front-page{
+    height: 750px;
+    width: 100%;
+     background-image: url("/images/homepage pic.jpg");
+     background-size: cover;
+     background-position: center top ; 
+     background-repeat: no-repeat;
+     display: flex;
+     flex-direction: column;
+     justify-content: space-between;  
+     
+ }
+ .container-fluid{
+    padding-left: 0 ;
+    padding-right: 0 ;
+ }
+
+ .logo{
+    color: black;
+    width: 60%;
+    
+}
+
+a{
+    color: black;
+}
+
+.menu .row>*{
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.front-footer .text-head{
+    
+    font-weight: bold;
+    color: white;
+}
+.front-footer p{
+    height: 150px;
+    font-size: 100%;
+}
+.front-footer button{
+    background-color: black;
+    color: white;
+    border: none;
+    font-size: small;
+    margin-bottom: 2%;
+    padding: 1%;
+}
+.menu a{
+    text-decoration: none;
+}
+
+.services .row{
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.blur 
+{
+    filter: blur(10px);
+    transition: transform 2s ease-in ;
+}
+.no-scroll
+{
+    overflow: hidden;
+}
+
+.layout .offcanvas{
+    margin-left: 10px;
+}
+
+.offcanvas button{
+    border-radius: 50; 
+    border-color: black;
+    border-width: 2px;
+}
+
+.offcanvas body{
+    height: 800px;
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.services .heading{
+    font-size: larger;
+    margin-top: 10px;
+    
+}
+
+.services div{
+    margin-top: 10px;
+}
+
+.footer{
+    background-color: black;
+    color: white;
+    height: 400px;
+    margin-top: 30px;
+}
+
